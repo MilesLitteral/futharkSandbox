@@ -1,0 +1,16 @@
+dist/
+dist-newstyle/
+outputs/
+outputs_saved/
+test/genemask/outputs
+test/genemask/outputs_broken
+.DS_Store
+*.swp
+.stack-work
+/stack.yaml.lock
+/output
+build
+.ghc*
+cabal.project.local
+
+fut/manifut
