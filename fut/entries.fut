@@ -1,5 +1,5 @@
-import "manifut/util/random"
-import "manifut/util/radix_sort"
+import "util/random"
+import "util/radix_sort"
 
 module Scalar = f32
 

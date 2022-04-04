@@ -17,8 +17,10 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver:
- url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/7.yaml
+# resolver: lts-18.3
+# compiler: ghc-9.0.1
+resolver: nightly-2022-04-04
+compiler: ghc-9.0.2
 # resolver: nightly-2022-01-02
 # resolver: ghc-9.0.1
 
@@ -39,9 +41,8 @@ packages:
 #
 extra-deps:
 - cuda-0.11.0.0@sha256:4e572a36f9ed3d2f8b40d6ce582b98b9ee0f499ed4ef1e88a33bb691e5be28c7,5654
-- massiv-1.0.1.1@sha256:b3bbea8a7e8096965dea89a3c72c7f1b7bc8ae71314ffe2777ab26074c095e61,5071
-- scheduler-2.0.0.1@sha256:3e36c5a50536d20f03320defd64e3d3adb6309b471ae048efda7df9d54361308,2556
 - massiv-io-1.0.0.1@sha256:36772f6a178514458cc68a7d5079d0c6d34321ad394ec9046e2676a2c665e831,4123
+
 
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git

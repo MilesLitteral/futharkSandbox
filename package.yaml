@@ -20,17 +20,19 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/futharkSandbox#readme>
 
 dependencies:
+- linear-base
 - base
+- base-compat
 - transformers
 - transformers-base
 - containers
 - mtl
 - monad-control
 - bytestring
-- lens
+- lens >= 5.1
 - exceptions
 # Needed by futhask
-- massiv    >= 1.0.0.0
+- massiv    >= 1.0.1.1
 - massiv-io >= 1.0.0.1
 - deepseq
 # - OpenCL

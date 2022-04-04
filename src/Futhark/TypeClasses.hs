@@ -4,9 +4,17 @@ import qualified Futhark.Raw as Raw
 import Futhark.Fut
 import Foreign
 import qualified Data.Massiv.Array as M
-import Control.Monad.Trans
-import Control.Monad.IO.Class
 import Control.Concurrent
+import Control.Monad.Base
+import Control.Monad.Trans
+import Control.Monad.State
+import Control.Monad.Catch
+import Control.Monad.Trans.Control
+import Control.Monad.Trans.Class
+import Control.Monad.Identity
+import Control.Monad.IO.Class
+import System.IO.Unsafe
+import Data.Functor.Identity
 
 class FutharkObject wrapped raw | wrapped -> raw, raw -> wrapped where
     wrapFO :: MVar Int -> ForeignPtr raw -> wrapped
@@ -24,11 +32,12 @@ addReferenceFO fo = liftIO $
 finalizeFO :: (MonadIO m, FutharkObject wrapped raw) => wrapped -> FutT m ()
 finalizeFO fo = liftIO $
     let (referenceCounter, pointer) = fromFO fo
-     in modifyMVar_ referenceCounter (\r
-     -> if r > 0
-            then pure (r-1)
-            else finalizeForeignPtr pointer >> pure 0)
-
+    in modifyMVar_ referenceCounter (\r
+     -> do if r == 0
+           then finalizeForeignPtr pointer
+           else when (r < 0) $ error $ "finalizing futhark object with less than zero references."
+           return (r-1)
+        )
 
 class (FutharkObject array rawArray, Storable element, M.Index dim)
     => FutharkArray array rawArray dim element
@@ -39,10 +48,11 @@ class (FutharkObject array rawArray, Storable element, M.Index dim)
         valuesFA :: Ptr Raw.Futhark_context -> Ptr rawArray -> Ptr element -> IO Int
 
 class Input fo ho where
-    toFuthark :: Monad m => ho -> FutT m fo
+    toFuthark :: MonadIO m => ho -> FutT m fo
 
 class Output fo ho where
-    fromFuthark :: Monad m => fo -> FutT m ho
+    fromFuthark     :: MonadIO m => fo -> FutT m ho
 
 class HasShape fo dim where
-    futharkShape :: Monad m => fo -> FutT m (M.Sz dim)
+    futharkShape :: MonadIO m => fo -> FutT m (M.Sz dim)
+

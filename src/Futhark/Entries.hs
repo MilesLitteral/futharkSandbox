@@ -9,9 +9,11 @@ import Futhark.Types
 import qualified Futhark.TypeClasses as T
 import Data.Int (Int8, Int16, Int32, Int64)
 import Data.Word (Word8, Word16, Word32, Word64)
+import Control.Monad.IO.Class
 import qualified Foreign as F
 import Foreign.C.Types
-randomField :: Monad m => Int64 -> Int64 -> Int64 -> FutT m F32_2d
+randomField ::
+  MonadIO m => Int64 -> Int64 -> Int64 -> FutT m F32_2d
 randomField seed b g
   = Fut.unsafeLiftFromIO
       $ (\ context
@@ -21,7 +23,7 @@ randomField seed b g
                    (\ context' -> Raw.entry_randomField context' out0 seed b g)
                  out0' <- U.peekFreeWrapIn context out0
                  return out0')
-sortBag :: Monad m => F32_2d -> F32_2d -> FutT m (F32_2d, F32_2d)
+sortBag :: MonadIO m => F32_2d -> F32_2d -> FutT m (F32_2d, F32_2d)
 sortBag keys values
   = Fut.unsafeLiftFromIO
       $ (\ context
@@ -39,7 +41,7 @@ sortBag keys values
                                      out1' <- U.peekFreeWrapIn context out1
                                      return (out0', out1'))))
 sortBagAndDoStuff ::
-  Monad m =>
+  MonadIO m =>
   F32_2d -> F32_2d -> FutT m (F32_2d, F32_2d, F32_1d, F32_1d)
 sortBagAndDoStuff keys values
   = Fut.unsafeLiftFromIO
